@@ -1,807 +1,566 @@
-Oui. Si le frontend est **HTML/CSS/JavaScript pur**, le projet devient encore plus léger et mieux adapté à ton PC avec **4 Go de RAM**.
+# 🇲🇬 MadaCV Recruit AI
 
-# 🇲🇬 Audit final — MadaCV Recruit AI
+**AI-Assisted CV Screening and Candidate Ranking Platform**
 
-## 1. 🎯 Concept
-
-**MadaCV Recruit AI** est une application web d'aide au recrutement.
-
-Le recruteur :
-
-1. crée ou sélectionne une offre d'emploi ;
-2. définit les compétences recherchées ;
-3. dépose plusieurs CV, par exemple 10 ;
-4. l'application extrait automatiquement le texte ;
-5. le système compare chaque CV avec l'offre ;
-6. calcule un score d'adéquation ;
-7. classe les candidats ;
-8. explique les compétences trouvées et manquantes.
-
-⚠️ Le système fournit une **aide à la présélection**. La décision finale appartient toujours au recruteur.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python\&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95%2B-009688?logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb\&logoColor=white)](https://www.mongodb.com/atlas)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?logo=javascript\&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5\&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3\&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Git](https://img.shields.io/badge/Git-F05032?logo=git\&logoColor=white)](https://git-scm.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions\&logoColor=white)](https://github.com/features/actions)
+[![Render](https://img.shields.io/badge/Render-46E3B7?logo=render\&logoColor=black)](https://render.com/)
 
 ---
 
-# 2. 🏗️ Architecture finale
+## Overview
+
+MadaCV Recruit AI is a web-based recruitment assistance platform designed to automate the initial screening and ranking of candidate resumes.
+
+The platform allows recruiters to create a job offer, define required skills, upload candidate CVs, extract their textual content, compare candidates against the job requirements, calculate a compatibility score and generate an explainable ranking.
+
+The system is designed as a **decision-support tool**. Final recruitment decisions remain under the responsibility of the recruiter.
+
+---
+
+## Core Workflow
 
 ```text
-                         INTERNET
-                            │
-                            ▼
-                ┌─────────────────────┐
-                │      FRONTEND       │
-                │                     │
-                │ HTML                 │
-                │ CSS                  │
-                │ JavaScript           │
-                └──────────┬──────────┘
-                           │
-                         HTTPS
-                           │
-                           ▼
-                ┌─────────────────────┐
-                │       BACKEND       │
-                │       FastAPI       │
-                │       Render        │
-                ├─────────────────────┤
-                │ API REST             │
-                │ Auth/JWT             │
-                │ PDF extraction       │
-                │ NLP                  │
-                │ Scoring              │
-                │ ML model             │
-                └──────────┬──────────┘
-                           │
-             ┌─────────────┴─────────────┐
-             ▼                           ▼
-   ┌──────────────────┐       ┌──────────────────┐
-   │ MongoDB Atlas     │       │ Stockage CV      │
-   │ ☁️ Cloud          │       │ PDF              │
-   ├──────────────────┤       └──────────────────┘
-   │ jobs             │
-   │ candidates       │
-   │ analyses         │
-   │ users            │
-   └──────────────────┘
+Job Offer
+    |
+    v
+Required Skills
+    |
+    v
+Candidate CVs
+    |
+    v
+PDF Text Extraction
+    |
+    v
+NLP Processing
+    |
+    v
+Sentence Transformer
+    |
+    v
+Semantic Similarity
+    |
+    v
+Skills Matching
+    |
+    v
+Hybrid Scoring
+    |
+    v
+Candidate Ranking
+    |
+    v
+Recruiter Dashboard
 ```
 
 ---
 
-# 3. 💻 Frontend
+## Technology Stack
 
-### Technologie
+| Layer              | Technology              |
+| ------------------ | ----------------------- |
+| Frontend           | HTML5, CSS3, JavaScript |
+| Backend            | Python, FastAPI         |
+| Database           | MongoDB Atlas           |
+| PDF Processing     | PyMuPDF                 |
+| NLP                | Sentence Transformers   |
+| NLP Model          | `all-MiniLM-L6-v2`      |
+| Authentication     | JWT                     |
+| Testing            | Pytest                  |
+| Version Control    | Git, GitHub             |
+| CI/CD              | GitHub Actions          |
+| Backend Deployment | Render                  |
+| MLOps              | MLflow                  |
+| API Documentation  | OpenAPI / Swagger       |
+
+---
+
+## AI Pipeline
+
+The platform uses `all-MiniLM-L6-v2` to generate semantic embeddings for job descriptions and candidate resumes.
 
 ```text
-HTML
-CSS
-JavaScript
+Job Description
+       |
+       v
+Text Processing
+       |
+       v
+MiniLM
+       |
+       v
+Job Embedding
+       |
+       | Semantic Comparison
+       |
+       v
+CV Embedding
+       ^
+       |
+     MiniLM
+       ^
+       |
+Extracted CV Text
 ```
 
-**Pas de React.**
+The semantic similarity is then combined with explicit skill matching to produce a final compatibility score.
 
-Pas besoin de :
+---
 
-```text
-React
-Vite
-Node.js frontend
-npm
-React Router
-```
+## Scoring Model
 
-Le frontend peut être extrêmement léger.
+The MVP uses a hybrid scoring approach:
 
-Structure :
+| Component           |   Weight |
+| ------------------- | -------: |
+| Semantic similarity |      60% |
+| Skills matching     |      30% |
+| Explicit criteria   |      10% |
+| **Final score**     | **100%** |
 
-```text
-frontend/
-│
-├── index.html
-├── login.html
-├── dashboard.html
-├── job.html
-├── candidates.html
-├── analysis.html
-│
-├── css/
-│   └── style.css
-│
-└── js/
-    ├── api.js
-    ├── auth.js
-    ├── dashboard.js
-    ├── jobs.js
-    ├── candidates.js
-    └── analysis.js
-```
-
-Le JavaScript communiquera avec FastAPI avec `fetch()`.
-
-Exemple :
+Example:
 
 ```text
-HTML
- ↓
-JavaScript
- ↓
-fetch()
- ↓
-FastAPI
- ↓
-MongoDB / ML
+Candidate: CV07
+
+Semantic similarity:    94%
+Skills matching:        87%
+Explicit criteria:      90%
+
+Final score:            91%
 ```
 
 ---
 
-# 4. ⚙️ Backend
+## Candidate Analysis
 
-Technologie :
+For each candidate, the system provides:
 
 ```text
+Candidate: CV07
+Final Score: 91%
+
+Matched Skills
+--------------
 Python
 FastAPI
+Git
+Linux
+Docker
+CI/CD
+
+Missing Skills
+--------------
+MLflow
+
+Strengths
+---------
+Backend development
+REST API development
+Linux environment
+Git
+Docker
 ```
 
-Hébergement :
+The purpose of this analysis is to make the ranking more transparent and easier for the recruiter to review.
+
+---
+
+## Architecture
 
 ```text
-Render
-```
-
-Structure recommandée :
-
-```text
-backend/
-│
-├── app/
-│   ├── main.py
-│   │
-│   ├── routes/
-│   │   ├── auth.py
-│   │   ├── jobs.py
-│   │   ├── candidates.py
-│   │   └── analysis.py
-│   │
-│   ├── services/
-│   │   ├── pdf_service.py
-│   │   ├── ml_service.py
-│   │   └── scoring_service.py
-│   │
-│   ├── models/
-│   │   ├── job.py
-│   │   ├── candidate.py
-│   │   └── analysis.py
-│   │
-│   ├── database.py
-│   └── config.py
-│
-├── requirements.txt
-└── .env
+                    Recruiter
+                        |
+                        v
+              +-------------------+
+              |     Frontend      |
+              | HTML/CSS/JS       |
+              +---------+---------+
+                        |
+                     REST API
+                        |
+                        v
+              +-------------------+
+              |      FastAPI      |
+              +---------+---------+
+                        |
+          +-------------+-------------+
+          |                           |
+          v                           v
+ +----------------+          +------------------+
+ | MongoDB Atlas  |          |   NLP Pipeline   |
+ |                |          |                  |
+ | Users          |          | PyMuPDF          |
+ | Jobs           |          | MiniLM           |
+ | Candidates     |          | Similarity       |
+ | Analyses       |          | Scoring          |
+ +----------------+          +------------------+
 ```
 
 ---
 
-# 5. 📄 Traitement des CV
-
-Pipeline :
+## Project Structure
 
 ```text
-CV.pdf
-   ↓
-Upload
-   ↓
-FastAPI
-   ↓
-PyMuPDF
-   ↓
-Extraction du texte
-   ↓
-Nettoyage
-   ↓
-Analyse NLP
-```
-
-Pour le MVP, on accepte principalement les **PDF contenant du texte**.
-
-Un CV scanné comme image nécessitera plus tard :
-
-```text
-PDF image
-   ↓
-OCR
-   ↓
-Texte
-```
-
-L'OCR peut donc être une fonctionnalité **V2**.
-
----
-
-# 6. 🤖 ML — un seul modèle
-
-On garde **un seul modèle NLP** :
-
-```text
-all-MiniLM-L6-v2
-```
-
-Son rôle :
-
-> transformer le texte en vecteurs afin de mesurer la similarité sémantique entre l'offre et le CV.
-
-Pipeline :
-
-```text
-OFFRE
-  ↓
-MiniLM
-  ↓
-Embedding offre
-       │
-       │ comparaison
-       ▼
-Embedding CV
-  ↑
-MiniLM
-  ↑
-CV
-```
-
-Puis :
-
-```text
-Embedding offre
-       +
-Embedding CV
-       ↓
-Similarité cosinus
-       ↓
-Score sémantique
+MadaCV-Recruit-AI/
+|
++-- frontend/
+|   +-- index.html
+|   +-- login.html
+|   +-- dashboard.html
+|   +-- job.html
+|   +-- candidates.html
+|   +-- analysis.html
+|   |
+|   +-- css/
+|   |   +-- style.css
+|   |
+|   +-- js/
+|       +-- api.js
+|       +-- auth.js
+|       +-- dashboard.js
+|       +-- jobs.js
+|       +-- candidates.js
+|       +-- analysis.js
+|
++-- backend/
+|   +-- app/
+|   |   +-- main.py
+|   |   +-- config.py
+|   |   +-- database.py
+|   |   |
+|   |   +-- models/
+|   |   +-- routes/
+|   |   +-- services/
+|   |
+|   +-- requirements.txt
+|   +-- .env.example
+|
++-- tests/
+|
++-- .github/
+|   +-- workflows/
+|       +-- ci.yml
+|
++-- .gitignore
++-- README.md
 ```
 
 ---
 
-# 7. 📊 Scoring
+## API
 
-Je recommande de ne **pas** utiliser uniquement la similarité du modèle.
+### Authentication
 
-Le score final peut être :
-
-```text
-                    SCORE FINAL
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-       60 %            30 %           10 %
-    Similarité       Skills        Critères
-    sémantique       détectées     explicites
+```http
+POST /api/auth/register
+POST /api/auth/login
 ```
 
-Exemple :
+### Jobs
 
-```text
-CV07
-
-Similarité :        94 %
-Skills :            87 %
-Critères :          90 %
-
-Score final :       91 %
-```
-
-Résultat :
-
-```text
-🥇 CV07 — 91 %
-🥈 CV03 — 87 %
-🥉 CV09 — 82 %
-   CV01 — 76 %
-   CV05 — 71 %
-```
-
----
-
-# 8. 🔎 Explication du résultat
-
-Le recruteur doit pouvoir comprendre **pourquoi** un CV obtient son score.
-
-Exemple :
-
-```text
-CV07 — Score : 91 %
-
-Compétences trouvées
-─────────────────────
-✅ Python
-✅ FastAPI
-✅ Git
-✅ Linux
-✅ Docker
-✅ CI/CD
-
-Compétences manquantes
-───────────────────────
-⚠️ MLflow
-
-Points forts
-────────────
-• Expérience backend
-• API REST
-• Git
-• Docker
-• Linux
-```
-
-Cela rend le système beaucoup plus professionnel qu'un simple :
-
-```text
-91 %
-```
-
----
-
-# 9. 🗄️ MongoDB Atlas
-
-MongoDB Atlas reste la base de données cloud.
-
-Collections :
-
-```text
-users
-jobs
-candidates
-analyses
-```
-
-### jobs
-
-```text
-{
-    title,
-    description,
-    skills,
-    createdAt
-}
-```
-
-### candidates
-
-```text
-{
-    name,
-    email,
-    cvUrl,
-    extractedText,
-    createdAt
-}
-```
-
-### analyses
-
-```text
-{
-    jobId,
-    candidateId,
-    score,
-    semanticScore,
-    skillsScore,
-    matchedSkills,
-    missingSkills,
-    createdAt
-}
-```
-
----
-
-# 10. 📁 Stockage des CV
-
-Je recommande :
-
-```text
-PDF
- ↓
-Stockage fichiers
- ↓
-URL
- ↓
-MongoDB
-```
-
-MongoDB conserve :
-
-```text
-candidateId
-name
-email
-cvUrl
-extractedText
-```
-
-et les résultats d'analyse.
-
-Évite de stocker directement de gros fichiers PDF dans les documents MongoDB pour le MVP.
-
----
-
-# 11. 🔐 Authentification
-
-Le recruteur dispose d'un compte.
-
-```text
-Login
-  ↓
-FastAPI
-  ↓
-JWT
-  ↓
-Dashboard
-```
-
-Sécurité :
-
-```text
-JWT
-Password hashing
-HTTPS
-CORS
-Validation des fichiers
-Limite taille PDF
-MIME type
-.env
-```
-
-Les secrets restent dans les variables d'environnement :
-
-```text
-MONGO_URI
-JWT_SECRET
-```
-
-Jamais dans GitHub.
-
----
-
-# 12. 🌐 API FastAPI
-
-API possible :
-
-```text
-POST   /api/auth/register
-POST   /api/auth/login
-
+```http
 GET    /api/jobs
 POST   /api/jobs
 GET    /api/jobs/{id}
 DELETE /api/jobs/{id}
-
-POST   /api/candidates/upload
-GET    /api/candidates/{id}
-
-POST   /api/analysis/{job_id}
-
-GET    /api/analysis/{job_id}
-GET    /api/analysis/{job_id}/ranking
 ```
 
-Le frontend HTML utilise simplement :
+### Candidates
 
-```text
-fetch()
+```http
+POST /api/candidates/upload
+GET  /api/candidates/{id}
 ```
 
-pour appeler ces endpoints.
+### Analysis
 
----
-
-# 13. ☁️ Render
-
-Render héberge :
-
-```text
-FastAPI
-   │
-   ├── API
-   ├── PDF processing
-   ├── MiniLM
-   └── scoring
-```
-
-Au démarrage :
-
-```text
-Render
- ↓
-FastAPI
- ↓
-chargement MiniLM
- ↓
-API disponible
-```
-
-Puis :
-
-```text
+```http
 POST /api/analysis/{job_id}
+GET  /api/analysis/{job_id}
+GET  /api/analysis/{job_id}/ranking
 ```
 
-lance l'analyse.
+### Health
+
+```http
+GET /api/health
+```
 
 ---
 
-# 14. 🚀 GitHub + CI/CD
+## Installation
 
-Architecture :
+### Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/MadaCV-Recruit-AI.git
+cd MadaCV-Recruit-AI
+```
+
+### Create a virtual environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Install dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### Configure environment variables
+
+Create:
 
 ```text
-VS Code
-   ↓
-Git
-   ↓
+backend/.env
+```
+
+Example:
+
+```env
+MONGODB_URI=mongodb+srv://...
+DATABASE_NAME=madacv
+JWT_SECRET=your_secret_key
+```
+
+Never commit `.env` to GitHub.
+
+### Run the API
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+API:
+
+```text
+http://localhost:8000
+```
+
+Swagger documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## Testing
+
+Run the test suite:
+
+```bash
+pytest
+```
+
+Health check:
+
+```bash
+curl http://localhost:8000/api/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok",
+  "project": "MadaCV Recruit AI"
+}
+```
+
+---
+
+## Deployment
+
+The target deployment architecture is:
+
+```text
 GitHub
-   ↓
-GitHub Actions
-   ↓
-Tests
-   ↓
-Deploy
-   ↓
-Render
-```
-
-Tu peux ainsi montrer au jury/recruteur :
-
-```text
-Git
-GitHub
-Branches
-Pull Requests
-Tests
-CI/CD
-Déploiement Cloud
+   |
+   +----------------------+
+   |                      |
+   v                      v
+Frontend              GitHub Actions
+   |                      |
+   |                      v
+Static Hosting       Tests / CI
+                          |
+                          v
+                       Render
+                          |
+                          v
+                       FastAPI
+                          |
+                          v
+                    MongoDB Atlas
 ```
 
 ---
 
-# 15. 🧪 MLOps
+## MLOps Roadmap
 
-Le projet commence simplement.
+### MVP
 
-### Phase 1
+* [x] FastAPI backend
+* [x] MongoDB Atlas integration
+* [x] PDF text extraction
+* [x] NLP embeddings
+* [x] Semantic similarity
+* [x] Skills matching
+* [x] Candidate scoring
+* [x] Candidate ranking
 
-```text
-Dataset
- ↓
-MiniLM
- ↓
-Scoring
- ↓
-API
-```
+### Production
 
-### Phase 2 — MLflow
+* [ ] Automated testing
+* [ ] CI/CD pipeline
+* [ ] Structured logging
+* [ ] API monitoring
+* [ ] Improved error handling
+* [ ] Production security hardening
 
-```text
-ML / évaluation
-       ↓
-     MLflow
-       ├── paramètres
-       ├── métriques
-       └── versions
-```
+### MLOps
 
-Puis :
+* [ ] MLflow experiment tracking
+* [ ] Model versioning
+* [ ] Evaluation metrics
+* [ ] Model comparison
+* [ ] Monitoring
+* [ ] Drift detection
 
-```text
-Model v1
-Model v2
-Model v3
-```
+### Advanced AI
 
-Tu peux comparer les versions.
-
-### Phase 3 — monitoring
-
-```text
-Analyses
-   ↓
-Métriques
-   ↓
-Monitoring
-   ↓
-Détection éventuelle de dérive
-```
-
-**MLflow ne doit donc pas être la première chose que tu installes.**
+* [ ] OCR for scanned CVs
+* [ ] Improved skill extraction
+* [ ] Multilingual CV processing
+* [ ] Advanced ranking models
+* [ ] Improved explainability
 
 ---
 
-# 16. 🖥️ Ton PC — 4 Go RAM
+## Responsible AI
 
-Avec ton matériel :
+MadaCV Recruit AI is designed as a recruitment assistance system rather than an autonomous hiring system.
 
-### Local
+The scoring mechanism evaluates professional relevance between the job requirements and candidate information.
 
-```text
-VS Code
-Python
-FastAPI
-HTML
-CSS
-JavaScript
-Git
-tests
-```
+The system should not use irrelevant personal characteristics such as:
 
-### Cloud
+* gender;
+* religion;
+* ethnicity;
+* photograph;
+* other sensitive characteristics unrelated to professional requirements.
 
-```text
-MongoDB Atlas
-Render
-GitHub
-GitHub Actions
-MLflow éventuellement
-```
-
-### À éviter
-
-```text
-❌ Docker Desktop
-❌ Kubernetes
-❌ gros LLM local
-❌ plusieurs modèles NLP
-❌ gros entraînement
-```
-
-Le choix **HTML/CSS/JS** réduit encore la consommation de ressources côté développement.
+The final hiring decision remains with the recruiter.
 
 ---
 
-# 17. ⚠️ Limites et risques
+## Resource Efficiency
 
-### CV scanné
+The MVP is designed to remain lightweight enough for development on a computer with limited resources.
 
-```text
-PDF image
-   ↓
-OCR
-```
+The architecture deliberately uses:
 
-→ fonctionnalité V2.
+* native HTML/CSS/JavaScript;
+* FastAPI;
+* one compact NLP model;
+* MongoDB Atlas;
+* cloud deployment for backend services;
+* a limited number of CVs per analysis during the MVP stage.
 
-### Biais
-
-Ne pas utiliser :
-
-```text
-❌ sexe
-❌ âge
-❌ origine
-❌ religion
-❌ photo
-```
-
-Le système doit principalement analyser :
-
-```text
-✅ compétences
-✅ expérience
-✅ formation pertinente
-✅ technologies
-✅ critères professionnels
-```
-
-### Interprétation du score
-
-Un score de 91 % signifie :
-
-> **forte correspondance avec les critères de l'offre selon la méthode de scoring utilisée.**
-
-Cela ne signifie pas :
-
-> « ce candidat est objectivement le meilleur ».
+This approach avoids unnecessary local resource consumption while keeping the architecture suitable for future scaling.
 
 ---
 
-# 18. 📂 Structure finale du projet
+## Project Objectives
+
+MadaCV Recruit AI combines several engineering disciplines:
 
 ```text
-MadaCV-Recruit-AI/
-│
-├── frontend/
-│   ├── index.html
-│   ├── login.html
-│   ├── dashboard.html
-│   ├── job.html
-│   ├── candidates.html
-│   ├── analysis.html
-│   │
-│   ├── css/
-│   │   └── style.css
-│   │
-│   └── js/
-│       ├── api.js
-│       ├── auth.js
-│       ├── dashboard.js
-│       ├── jobs.js
-│       ├── candidates.js
-│       └── analysis.js
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── database.py
-│   │   ├── config.py
-│   │   │
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── models/
-│   │
-│   ├── requirements.txt
-│   └── .env.example
-│
-├── tests/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── .gitignore
-└── README.md
+Artificial Intelligence
+        |
+        +-- NLP
+        +-- Embeddings
+        +-- Semantic Similarity
+        |
+        v
+Backend Engineering
+        |
+        +-- Python
+        +-- FastAPI
+        +-- REST API
+        |
+        v
+Database Engineering
+        |
+        +-- MongoDB
+        |
+        v
+DevOps
+        |
+        +-- Git
+        +-- GitHub
+        +-- CI/CD
+        +-- Cloud Deployment
+        |
+        v
+MLOps
+        |
+        +-- MLflow
+        +-- Experiment Tracking
+        +-- Model Versioning
+        +-- Monitoring
 ```
 
 ---
 
-# 19. 🏆 Évaluation finale
+## Project Status
 
-| Critère              | Évaluation |
-| -------------------- | ---------: |
-| Problème réel        |      ⭐⭐⭐⭐⭐ |
-| Frontend HTML/CSS/JS |      ⭐⭐⭐⭐⭐ |
-| Backend FastAPI      |      ⭐⭐⭐⭐⭐ |
-| NLP / IA             |      ⭐⭐⭐⭐⭐ |
-| MongoDB Atlas        |      ⭐⭐⭐⭐⭐ |
-| CI/CD                |      ⭐⭐⭐⭐⭐ |
-| MLOps                |       ⭐⭐⭐⭐ |
-| Déploiement          |      ⭐⭐⭐⭐⭐ |
-| Faisabilité 4 Go RAM |      ⭐⭐⭐⭐⭐ |
-| Portfolio            |      ⭐⭐⭐⭐⭐ |
+**Status: In active development**
 
-## Verdict : **9/10**
+The current priority is to complete the MVP before introducing advanced MLOps components.
 
-Le projet est particulièrement cohérent pour un objectif **AI Integration / Backend-MLOps**.
+---
 
-La chaîne finale est :
+## Author
 
-```text
-🇲🇬 MadaCV Recruit AI
+**RATIARISON Fanilo Fiderana**
 
-HTML
-CSS
-JavaScript
-      ↓
-FastAPI
-      ↓
-PyMuPDF
-      ↓
-MiniLM
-      ↓
-Scoring hybride
-      ↓
-Classement des CV
-      ↓
-MongoDB Atlas
-      ↓
-GitHub
-      ↓
-GitHub Actions
-      ↓
-Render
-      ↓
-MLflow
-      ↓
-Monitoring
-```
+Information Technology Student
+Madagascar
 
-**Pas de React. Pas de Docker pour le MVP. Un seul modèle ML. Maximum 10 CV au départ.**
+Areas of interest:
 
-C'est cette version que je retiendrais comme **architecture officielle du projet**.
+* Artificial Intelligence
+* Backend Development
+* NLP
+* MLOps
+* DevOps
+* Web Development
 
+---
+
+## License
+
+This project is released under the MIT License.
+
+---
+
+## Vision
+
+MadaCV Recruit AI aims to provide a lightweight, explainable and practical AI-assisted solution for the initial screening of job applications.
+
+**AI + NLP + Backend + Cloud + DevOps + MLOps**
