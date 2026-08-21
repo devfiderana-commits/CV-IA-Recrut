@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"/home/fiderana/IA MadaCV/backend\" && python -m venv \\.venv && \\. \\.venv/bin/activate && pip install -r requirements\\.txt && pytest -q$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd '/home/fiderana/IA MadaCV/backend' && python3 -m pip install -r requirements\\.txt$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

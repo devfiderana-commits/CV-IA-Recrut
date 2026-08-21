@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MadaCV Recruit AI</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ---------- RESET & BASE ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f6fa;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- HEADER / NAV ---------- */
+    .app-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-bottom: 3px solid #3b82f6;
+    }
+    .app-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+    .app-header .logo i {
+      color: #3b82f6;
+      font-size: 1.8rem;
+    }
+    .app-header .logo span {
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .app-header .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .app-header .nav-tabs button {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 0.5rem 1.25rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .app-header .nav-tabs button:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+    }
+    .app-header .nav-tabs button.active {
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    /* ---------- CONTAINER ---------- */
+    .container {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* ---------- PAGES (affichage conditionnel) ---------- */
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .page.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- CARDS & FORMULAIRE ---------- */
+    .card {
+      background: #fff;
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+      border: 1px solid #f1f5f9;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-title i {
+      color: #3b82f6;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: border 0.2s;
+      background: #fafbfc;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-success {
+      background: #059669;
+      color: #fff;
+    }
+    .btn-success:hover { background: #047857; }
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #e2e8f0;
+    }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-sm {
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .gap-2 { gap: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .text-muted { color: #94a3b8; }
+
+    /* ---------- LISTE DES OFFRES ---------- */
+    .job-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .job-item:hover { background: #f1f5f9; }
+    .job-item .job-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .job-item .job-title {
+      font-weight: 600;
+    }
+    .job-item .job-skills {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+    .job-item .job-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* ---------- UPLOAD CV ---------- */
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 0.75rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: pointer;
+      background: #fafbfc;
+    }
+    .dropzone.dragover {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    .dropzone i {
+      font-size: 2.5rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .file-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .file-tag {
+      background: #e2e8f0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .file-tag i {
+      cursor: pointer;
+      color: #dc2626;
+    }
+
+    /* ---------- RÉSULTATS CLASSEMENT ---------- */
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .ranking-table th {
+      text-align: left;
+      padding: 0.75rem 0.5rem;
+      border-bottom: 2px solid #e2e8f0;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .ranking-table td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .ranking-table tr:hover td {
+      background: #f8fafc;
+    }
+    .score-badge {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .score-high { background: #d1fae5; color: #065f46; }
+    .score-mid { background: #fef3c7; color: #92400e; }
+    .score-low { background: #fee2e2; color: #991b1b; }
+
+    .match-details {
+      font-size: 0.85rem;
+      color: #475569;
+    }
+    .match-details .match-ok { color: #059669; }
+    .match-details .match-miss { color: #dc2626; }
+
+    /* ---------- DASHBOARD (intégré) ---------- */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 0.3rem;
+    }
+    .status-dot.green { background: #22c55e; }
+    .status-dot.red { background: #ef4444; }
+    .status-dot.yellow { background: #eab308; }
+    .status-dot.gray { background: #94a3b8; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .badge.success { background: #d1fae5; color: #065f46; }
+    .badge.danger { background: #fee2e2; color: #991b1b; }
+    .badge.secondary { background: #f1f5f9; color: #475569; }
+
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 1.5rem;
+      max-width: 550px;
+      width: 90%;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .modal .modal-header h2 {
+      font-size: 1.3rem;
+    }
+    .modal .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 640px) {
+      .app-header { flex-direction: column; align-items: stretch; }
+      .app-header .nav-tabs { justify-content: center; }
+      .container { padding: 0 1rem; }
+      .flex-row { flex-direction: column; align-items: stretch; }
+      .job-item { flex-wrap: wrap; gap: 0.5rem; }
+    }
+
+    /* ---------- UTILITAIRES ---------- */
+    .text-center { text-align: center; }
+    .mt-3 { margin-top: 2rem; }
+    .mb-0 { margin-bottom: 0; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- HEADER + NAVIGATION                                            -->
+<!-- ============================================================ -->
+<header class="app-header">
+  <div class="logo">
+    <i class="fas fa-robot"></i>
+    <span>MadaCV Recruit AI</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="active" data-page="offres"><i class="fas fa-briefcase"></i> Offres</button>
+    <button data-page="analyse"><i class="fas fa-file-alt"></i> Analyser</button>
+    <button data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- MAIN CONTAINER                                                -->
+<!-- ============================================================ -->
+<main class="container">
+
+  <!-- ---------- PAGE : OFFRES ---------- -->
+  <section id="page-offres" class="page active">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-list"></i> Liste des offres</div>
+      <div id="jobList">
+        <p class="text-muted">Chargement des offres...</p>
+      </div>
+      <div class="mt-2">
+        <button class="btn btn-primary" id="btnNewJob"><i class="fas fa-plus"></i> Nouvelle offre</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- PAGE : ANALYSER ---------- -->
+  <section id="page-analyse" class="page">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-upload"></i> Analyser des CV</div>
+      <p class="text-muted mb-1">Sélectionnez une offre, déposez vos CV (PDF, jusqu'à 10) et lancez l'analyse.</p>
+
+      <label for="selectJob">Offre cible</label>
+      <select id="selectJob">
+        <option value="">-- Choisissez une offre --</option>
+      </select>
+
+      <label>Déposer les CV</label>
+      <div class="dropzone" id="dropzone">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Glissez vos fichiers ici ou cliquez pour sélectionner</p>
+        <input type="file" id="fileInput" multiple accept=".pdf" style="display:none;" />
+      </div>
+      <div class="file-list" id="fileList"></div>
+
+      <div class="flex-row mt-2">
+        <button class="btn btn-success" id="btnAnalyze"><i class="fas fa-microscope"></i> Lancer l'analyse</button>
+        <span id="analyzeStatus" class="text-muted"></span>
+      </div>
+    </div>
+
+    <!-- Résultats -->
+    <div id="resultsContainer" class="card hidden">
+      <div class="card-title"><i class="fas fa-trophy"></i> Classement des candidats</div>
+      <div id="resultsContent">
+        <!-- Le tableau sera injecté ici -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- PAGE : DASHBOARD ---------- -->
+  <section id="page-dashboard" class="page">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-heartbeat"></i> État du système</div>
+      <div class="dashboard-grid">
+        <!-- API -->
+        <div>
+          <h4><i class="fas fa-server"></i> API Backend</h4>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span id="healthStatus" style="font-weight:700;">—</span>
+            <span class="badge secondary" id="healthBadge"><span class="status-dot gray"></span> En attente</span>
+          </div>
+          <div id="apiHealthText" class="text-muted" style="font-size:0.9rem;">Chargement...</div>
+        </div>
+        <!-- MongoDB -->
+        <div>
+          <h4><i class="fas fa-database"></i> MongoDB Atlas</h4>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span id="dbStatus" style="font-weight:700;">—</span>
+            <span class="badge secondary" id="dbBadge"><span class="status-dot gray"></span> En attente</span>
+          </div>
+          <div id="mongoText" class="text-muted" style="font-size:0.9rem;">Connexion en cours...</div>
+        </div>
+        <!-- Test DB -->
+        <div>
+          <h4><i class="fas fa-vial"></i> Test d'écriture</h4>
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span id="testStatus" style="font-weight:700;">—</span>
+            <button class="btn btn-sm btn-outline" id="dbTestBtn"><i class="fas fa-play"></i> Lancer</button>
+          </div>
+          <div id="dbTestText" class="text-muted" style="font-size:0.9rem;">En attente</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;font-size:0.8rem;color:#94a3b8;">
+        <i class="far fa-clock"></i> Dernière mise à jour : <span id="lastUpdated">—</span>
+        &nbsp;·&nbsp; API Root : <code id="apiRootDisplay" style="background:#f1f5f9;padding:0.1rem 0.5rem;border-radius:4px;">—</code>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <button class="btn btn-sm btn-outline" id="refreshDashboardBtn"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================ -->
+<!-- MODAL : NOUVELLE OFFRE                                        -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="modalNewJob">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> Créer une offre</h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <form id="formNewJob">
+      <label>Titre du poste</label>
+      <input type="text" id="jobTitle" required placeholder="ex: Stagiaire Backend" />
+
+      <label>Description</label>
+      <textarea id="jobDescription" placeholder="Détails du poste, missions..."></textarea>
+
+      <label>Compétences recherchées (séparées par des virgules)</label>
+      <input type="text" id="jobSkills" placeholder="Python, FastAPI, Git, Docker" />
+
+      <div class="flex-row mt-2">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+        <button type="button" class="btn btn-outline" id="modalCancel">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT                                                    -->
+<!-- ============================================================ -->
+<script>
+  // ----------------------------------------------------------------
+  // Configuration
+  // ----------------------------------------------------------------
+  const API_ROOT = window.location.origin;
+
+  // Éléments DOM globaux
+  const DOM = {
+    // Navigation
+    navButtons: document.querySelectorAll('[data-page]'),
+    pages: {
+      offres: document.getElementById('page-offres'),
+      analyse: document.getElementById('page-analyse'),
+      dashboard: document.getElementById('page-dashboard'),
+    },
+    // Offres
+    jobList: document.getElementById('jobList'),
+    btnNewJob: document.getElementById('btnNewJob'),
+    modalNewJob: document.getElementById('modalNewJob'),
+    modalClose: document.getElementById('modalClose'),
+    modalCancel: document.getElementById('modalCancel'),
+    formNewJob: document.getElementById('formNewJob'),
+    jobTitle: document.getElementById('jobTitle'),
+    jobDescription: document.getElementById('jobDescription'),
+    jobSkills: document.getElementById('jobSkills'),
+    // Analyse
+    selectJob: document.getElementById('selectJob'),
+    dropzone: document.getElementById('dropzone'),
+    fileInput: document.getElementById('fileInput'),
+    fileList: document.getElementById('fileList'),
+    btnAnalyze: document.getElementById('btnAnalyze'),
+    analyzeStatus: document.getElementById('analyzeStatus'),
+    resultsContainer: document.getElementById('resultsContainer'),
+    resultsContent: document.getElementById('resultsContent'),
+    // Dashboard
+    healthStatus: document.getElementById('healthStatus'),
+    dbStatus: document.getElementById('dbStatus'),
+    testStatus: document.getElementById('testStatus'),
+    apiHealthText: document.getElementById('apiHealthText'),
+    mongoText: document.getElementById('mongoText'),
+    dbTestText: document.getElementById('dbTestText'),
+    healthBadge: document.getElementById('healthBadge'),
+    dbBadge: document.getElementById('dbBadge'),
+    lastUpdated: document.getElementById('lastUpdated'),
+    apiRootDisplay: document.getElementById('apiRootDisplay'),
+    refreshDashboardBtn: document.getElementById('refreshDashboardBtn'),
+    dbTestBtn: document.getElementById('dbTestBtn'),
+  };
+
+  // État
+  let selectedFiles = [];
+  let jobs = [];
+
+  // Afficher l'API_ROOT
+  if (DOM.apiRootDisplay) DOM.apiRootDisplay.textContent = API_ROOT;
+
+  // ----------------------------------------------------------------
+  // NAVIGATION
+  // ----------------------------------------------------------------
+  DOM.navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      DOM.navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const page = btn.dataset.page;
+      Object.keys(DOM.pages).forEach(key => {
+        DOM.pages[key].classList.toggle('active', key === page);
+      });
+      // Recharger les données si nécessaire
+      if (page === 'offres') loadJobs();
+      if (page === 'analyse') loadJobSelect();
+      if (page === 'dashboard') refreshDashboard();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // GESTION DES OFFRES
+  // ----------------------------------------------------------------
+  async function loadJobs() {
+    try {
+      const res = await fetch(`${API_ROOT}/api/jobs`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      jobs = await res.json();
+      renderJobs();
+    } catch (e) {
+      DOM.jobList.innerHTML = `<p class="text-muted">Erreur : ${e.message}</p>`;
+    }
+  }
+
+  function renderJobs() {
+    if (!jobs.length) {
+      DOM.jobList.innerHTML = `<p class="text-muted">Aucune offre pour l'instant. Créez-en une !</p>`;
+      return;
+    }
+    DOM.jobList.innerHTML = jobs.map(job => `
+      <div class="job-item" data-id="${job.id}">
+        <div class="job-info">
+          <span class="job-title">${job.title || 'Sans titre'}</span>
+          <span class="job-skills">${job.skills ? job.skills.join(', ') : ''}</span>
+        </div>
+        <div class="job-actions">
+          <button class="btn btn-sm btn-outline select-job-btn" data-id="${job.id}"><i class="fas fa-arrow-right"></i> Analyser</button>
+        </div>
+      </div>
+    `).join('');
+
+    // Événements sur les boutons "Analyser"
+    document.querySelectorAll('.select-job-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.dataset.id;
+        // Basculer vers l'onglet Analyse
+        document.querySelector('[data-page="analyse"]').click();
+        // Sélectionner l'offre dans le select
+        DOM.selectJob.value = id;
+        // Déclencher l'événement change pour mettre à jour
+        DOM.selectJob.dispatchEvent(new Event('change'));
+      });
+    });
+  }
+
+  // --- Créer une offre (modal) ---
+  DOM.btnNewJob.addEventListener('click', () => {
+    DOM.modalNewJob.classList.add('active');
+  });
+
+  function closeModal() {
+    DOM.modalNewJob.classList.remove('active');
+    DOM.formNewJob.reset();
+  }
+  DOM.modalClose.addEventListener('click', closeModal);
+  DOM.modalCancel.addEventListener('click', closeModal);
+  DOM.modalNewJob.addEventListener('click', (e) => {
+    if (e.target === DOM.modalNewJob) closeModal();
+  });
+
+  DOM.formNewJob.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = DOM.jobTitle.value.trim();
+    const description = DOM.jobDescription.value.trim();
+    const skills = DOM.jobSkills.value.split(',').map(s => s.trim()).filter(Boolean);
+
+    if (!title) return alert('Le titre est requis.');
+
+    try {
+      const res = await fetch(`${API_ROOT}/api/jobs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, skills }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      closeModal();
+      loadJobs();
+      // Recharger le select dans l'onglet Analyse
+      loadJobSelect();
+    } catch (e) {
+      alert(`Erreur : ${e.message}`);
+    }
+  });
+
+  // ----------------------------------------------------------------
+  // GESTION DE L'ANALYSE
+  // ----------------------------------------------------------------
+  async function loadJobSelect() {
+    try {
+      const res = await fetch(`${API_ROOT}/api/jobs`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      jobs = await res.json();
+      DOM.selectJob.innerHTML = `<option value="">-- Choisissez une offre --</option>` +
+        jobs.map(j => `<option value="${j.id}">${j.title || 'Sans titre'}</option>`).join('');
+    } catch (e) {
+      console.error('Erreur chargement offres:', e);
+    }
+  }
+
+  // --- Upload de fichiers (drag & drop + click) ---
+  DOM.dropzone.addEventListener('click', () => DOM.fileInput.click());
+  DOM.dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    DOM.dropzone.classList.add('dragover');
+  });
+  DOM.dropzone.addEventListener('dragleave', () => {
+    DOM.dropzone.classList.remove('dragover');
+  });
+  DOM.dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    DOM.dropzone.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files);
+    addFiles(files);
+  });
+
+  DOM.fileInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    addFiles(files);
+    e.target.value = ''; // reset
+  });
+
+  function addFiles(files) {
+    const pdfFiles = files.filter(f => f.type === 'application/pdf');
+    if (pdfFiles.length === 0) return alert('Seuls les fichiers PDF sont acceptés.');
+    if (selectedFiles.length + pdfFiles.length > 10) return alert('Maximum 10 CV.');
+    selectedFiles = [...selectedFiles, ...pdfFiles];
+    renderFileList();
+  }
+
+  function renderFileList() {
+    DOM.fileList.innerHTML = selectedFiles.map((f, idx) => `
+      <span class="file-tag">
+        <i class="fas fa-file-pdf"></i> ${f.name}
+        <i class="fas fa-times" data-idx="${idx}"></i>
+      </span>
+    `).join('');
+    // Événements suppression
+    DOM.fileList.querySelectorAll('.fa-times').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.dataset.idx);
+        selectedFiles.splice(idx, 1);
+        renderFileList();
+      });
+    });
+  }
+
+  // --- Lancer l'analyse ---
+  DOM.btnAnalyze.addEventListener('click', async () => {
+    const jobId = DOM.selectJob.value;
+    if (!jobId) return alert('Veuillez sélectionner une offre.');
+    if (selectedFiles.length === 0) return alert('Veuillez déposer au moins un CV.');
+
+    DOM.btnAnalyze.disabled = true;
+    DOM.analyzeStatus.textContent = 'Analyse en cours...';
+
+    // Préparer FormData
+    const formData = new FormData();
+    formData.append('job_id', jobId);
+    selectedFiles.forEach(f => formData.append('files', f));
+
+    try {
+      const res = await fetch(`${API_ROOT}/api/analyze`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      // Afficher les résultats
+      DOM.resultsContainer.classList.remove('hidden');
+      renderResults(data);
+      DOM.analyzeStatus.textContent = '✅ Analyse terminée.';
+    } catch (e) {
+      alert(`Erreur : ${e.message}`);
+      DOM.analyzeStatus.textContent = '❌ Échec de l\'analyse.';
+    } finally {
+      DOM.btnAnalyze.disabled = false;
+    }
+  });
+
+  function renderResults(data) {
+    // data attendu : { results: [ { candidate: { name, email }, score, matchedSkills, missingSkills, ... } ] }
+    const results = data.results || [];
+    if (!results.length) {
+      DOM.resultsContent.innerHTML = `<p class="text-muted">Aucun résultat.</p>`;
+      return;
+    }
+    // Trier par score décroissant
+    const sorted = [...results].sort((a, b) => b.score - a.score);
+
+    let html = `<table class="ranking-table">
+      <thead><tr>
+        <th>#</th>
+        <th>Candidat</th>
+        <th>Score</th>
+        <th>Compétences</th>
+        <th>Détails</th>
+      </tr></thead><tbody>`;
+    sorted.forEach((item, idx) => {
+      const score = Math.round(item.score * 100);
+      const scoreClass = score >= 80 ? 'score-high' : (score >= 60 ? 'score-mid' : 'score-low');
+      const matched = item.matchedSkills || [];
+      const missing = item.missingSkills || [];
+      html += `<tr>
+        <td>${idx + 1}</td>
+        <td><strong>${item.candidate?.name || 'Anonyme'}</strong><br/><small class="text-muted">${item.candidate?.email || ''}</small></td>
+        <td><span class="score-badge ${scoreClass}">${score}%</span></td>
+        <td><span class="match-details">
+          ${matched.map(s => `<span class="match-ok"><i class="fas fa-check-circle"></i> ${s}</span>`).join(' ')}
+          ${missing.map(s => `<span class="match-miss"><i class="fas fa-times-circle"></i> ${s}</span>`).join(' ')}
+        </span></td>
+        <td><button class="btn btn-sm btn-outline" onclick="alert('Détails à venir...')">Voir</button></td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    DOM.resultsContent.innerHTML = html;
+  }
+
+  // ----------------------------------------------------------------
+  // DASHBOARD
+  // ----------------------------------------------------------------
+  const statusMap = { true: 'success', false: 'danger' };
+
+  async function refreshDashboard() {
+    // API Health
+    try {
+      const health = await fetchJson('/api/health');
+      DOM.healthStatus.textContent = '✅ OK';
+      DOM.apiHealthText.textContent = `Projet: ${health.project || 'MadaCV'}`;
+      setBadge(DOM.healthBadge, true, 'Connecté');
+    } catch (e) {
+      DOM.healthStatus.textContent = '❌ Échec';
+      DOM.apiHealthText.textContent = e.message;
+      setBadge(DOM.healthBadge, false, 'Échec');
+    }
+
+    // DB Status
+    try {
+      const db = await fetchJson('/api/db-status');
+      const connected = db.db_connected === true;
+      DOM.dbStatus.textContent = connected ? '✅ OK' : '❌ Déconnecté';
+      DOM.mongoText.textContent = connected ? 'MongoDB actif' : 'MongoDB non connecté';
+      setBadge(DOM.dbBadge, connected, 'Connecté');
+    } catch (e) {
+      DOM.dbStatus.textContent = '❌ Échec';
+      DOM.mongoText.textContent = e.message;
+      setBadge(DOM.dbBadge, false, 'Échec');
+    }
+
+    // Test DB (ne pas relancer automatiquement)
+    // On garde l'état précédent, sauf si on a un message
+    updateTimestamp();
+  }
+
+  async function runDbTest() {
+    DOM.testStatus.textContent = '⏳ En cours...';
+    DOM.dbTestText.textContent = 'Exécution...';
+    try {
+      const result = await fetchJson('/api/test-db');
+      if (result.result === 'ok') {
+        DOM.testStatus.textContent = '✅ Réussi';
+        DOM.dbTestText.textContent = `Document créé, ID: ${result.document_id || 'N/A'}`;
+      } else {
+        DOM.testStatus.textContent = '❌ Échec';
+        DOM.dbTestText.textContent = `Résultat: ${result.result}`;
+      }
+    } catch (e) {
+      DOM.testStatus.textContent = '❌ Échec';
+      DOM.dbTestText.textContent = e.message;
+    }
+    updateTimestamp();
+  }
+
+  function setBadge(el, isOk, okLabel = 'OK', failLabel = 'Échec') {
+    if (!el) return;
+    const dot = el.querySelector('.status-dot');
+    const text = el.childNodes[el.childNodes.length - 1];
+    if (isOk === true) {
+      el.className = 'badge success';
+      if (dot) dot.className = 'status-dot green';
+      if (text) text.textContent = okLabel;
+    } else if (isOk === false) {
+      el.className = 'badge danger';
+      if (dot) dot.className = 'status-dot red';
+      if (text) text.textContent = failLabel;
+    } else {
+      el.className = 'badge secondary';
+      if (dot) dot.className = 'status-dot gray';
+      if (text) text.textContent = 'En attente';
+    }
+  }
+
+  function updateTimestamp() {
+    if (DOM.lastUpdated) {
+      const now = new Date();
+      DOM.lastUpdated.textContent = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+  }
+
+  async function fetchJson(path) {
+    const res = await fetch(`${API_ROOT}${path}`);
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`${res.status} ${res.statusText}: ${text}`);
+    }
+    return res.json();
+  }
+
+  // Événements dashboard
+  DOM.refreshDashboardBtn.addEventListener('click', refreshDashboard);
+  DOM.dbTestBtn.addEventListener('click', runDbTest);
+
+  // ----------------------------------------------------------------
+  // INITIALISATION
+  // ----------------------------------------------------------------
+  async function init() {
+    await loadJobs();
+    await loadJobSelect();
+    await refreshDashboard();
+    // Si on a des offres, sélectionner la première dans le select
+    if (jobs.length) {
+      DOM.selectJob.value = jobs[0].id;
+    }
+    // Afficher le dashboard par défaut (ou offres)
+    // déjà sur offres
+  }
+
+  init();
+
+  // Petit helper pour les détails (déjà utilisé dans le rendu)
+  window.alertDetails = (id) => {
+    alert(`Détails du candidat (ID: ${id}) - à implémenter avec un appel API.`);
+  };
+</script>
+
+</body>
+</html>
